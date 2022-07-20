@@ -33,9 +33,19 @@ export default function Home({ posts }) {
 }
 
 export async function getServerSideProps(ctx) {
+    // - Get the current enviroment
+    let dev = process.env.NODE_ENV !== "production"
+    let { DEV_URL, PROD_URL } = process.env
+
+    // - Request posts from API
+    let response = await fetch(`${dev ? DEV_URL : PROD_URL}/api/posts`)
+
+    // - Extract data
+    let data = await response.json()
+
     return {
         props: {
-            posts: ['message']
+            posts: data["message"]
         }
     }
 }
