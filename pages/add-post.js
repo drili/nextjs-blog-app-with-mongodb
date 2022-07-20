@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useState } from "react";
 
-import Nav from "../components/Nav"
-import styles from '../styles/Home.module.css'
+import Nav from "../components/Nav";
+import styles from '../styles/Home.module.css';
 
 export default function AddPost() {
     const [title, setTitle] = useState("")
@@ -10,7 +10,7 @@ export default function AddPost() {
     const [message, setMessage] = useState("")
 
     const handlePost = async (e) => {
-        e.preventDefault
+        e.preventDefault()
 
         // - Reset error and message
         setError("")
@@ -18,7 +18,36 @@ export default function AddPost() {
 
         // - Fields check
         if (!title || !content) {
-            return setError("All fields are required!")
+            return (
+                setError("All fields are required!")
+            )
+        }
+
+        // - Post structure
+        let post = {
+            title,
+            content,
+            published: false,
+            createdAt: new Date().toISOString()
+        }
+
+        // - Save post
+        let response = await fetch("/api/posts", {
+            method: "POST",
+            body: JSON.stringify(post)
+        })
+
+        // - Get the data
+        let data = await response.json()
+        if (data.success) {
+            // - Reset fields
+            setTitle("")
+            setContent("")
+            // - Set message
+            return setMessage(data.message)
+        } else {
+            // - Set the error
+            return setError(data.message)
         }
     }
 
@@ -32,7 +61,7 @@ export default function AddPost() {
                         <div className={styles.formItem}>
                             <h3 className={styles.error}>{error}</h3>
                         </div>
-                    ) : null}
+                    ) : null }
 
                     {message ? (
                         <div className={styles.formItem}>
@@ -64,11 +93,10 @@ export default function AddPost() {
                     </div>
 
                     <div className={styles.formItem}>
-                        <button type="submit">Add Post</button>
+                        <button type="submit">Add post</button>
                     </div>
                 </form>
             </div>
         </div>
     )
-
 }
