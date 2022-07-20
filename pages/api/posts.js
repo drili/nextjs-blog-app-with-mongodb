@@ -21,3 +21,27 @@ export default async function handler(req, res) {
             break
     }
 }
+
+async function getPosts(req, res) {
+    try {
+        let { db } = await connectToDatabase()
+        
+        let posts = await db
+            .collection('posts')
+            .find({})
+            .sort({ published: -1 })
+            .toArray();
+        
+        // - Return the posts
+        return res.json({
+            message: JSON.parse(JSON.stringify(posts)),
+            success: true,
+        });
+    } catch (error) {
+        // - Return the error
+        return res.json({
+            message: new Error(error).message,
+            success: false,
+        });
+    }
+}
