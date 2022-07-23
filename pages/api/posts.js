@@ -63,3 +63,28 @@ async function addPost(req, res ) {
         })
     }
 }
+
+async function updatePost(req, res) {
+    try {
+        let { db } = await connectToDatabase()
+
+        await db.collection("posts").updateOne(
+            {
+                _id: new ObjectId(req.body)
+            },
+            {
+                $set: { published: true}
+            }
+        )
+
+        return res.json({
+            message: "Post updated succesfully",
+            success: true
+        })
+    } catch (error) {
+        return res.json({
+            message: new Error(error).message,
+            success: false,
+        });
+    }
+}
