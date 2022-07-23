@@ -19,9 +19,11 @@ export default function Home({ posts }) {
                         posts.length === 0 ? (
                             <h2>No added posts!</h2>
                         ) : (
+
                             <ul>
+                                {/* {posts} */}
                                 {posts.map((post, i) => (
-                                    <PostCard post={post} key={i}></PostCard>
+                                    <PostCard post={post} key={i} />
                                 ))}
                             </ul>
                         )
